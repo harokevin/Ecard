@@ -1,0 +1,133 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@drawable/background"
+    tools:context="com.example.dima.slideapp.setUpAccount">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SIGN UP"
+        android:id="@+id/signUpButton"
+        style="@style/btnStyleGenoa"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/nullcontact"
+        android:id="@+id/imageViewCONTACT_ICON"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editTextNAME"
+        android:layout_above="@+id/imageViewPHONENUMBER"
+        android:layout_alignLeft="@+id/editTextPHONENUMBER"
+        android:layout_alignStart="@+id/editTextPHONENUMBER" />
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/imageViewPHONENUMBER"
+        android:background="@drawable/phone"
+        android:layout_below="@+id/imageViewCONTACT_ICON"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:ems="10"
+        android:id="@+id/editTextPHONENUMBER"
+        android:layout_alignBottom="@+id/imageViewPHONENUMBER"
+        android:layout_alignLeft="@+id/signUpButton"
+        android:layout_alignStart="@+id/signUpButton" />
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/imageViewSNAPCHAT"
+        android:background="@drawable/snapchat"
+        android:layout_below="@+id/imageViewPHONENUMBER"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editTextSNAPCHAT"
+        android:layout_alignBottom="@+id/imageViewSNAPCHAT"
+        android:layout_alignLeft="@+id/editTextPHONENUMBER"
+        android:layout_alignStart="@+id/editTextPHONENUMBER"
+        android:layout_alignRight="@+id/editTextPHONENUMBER"
+        android:layout_alignEnd="@+id/editTextPHONENUMBER" />
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/imageViewINSTAGRAM"
+        android:background="@drawable/instagram"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editTextINSTAGRAM"
+        android:layout_alignBottom="@+id/imageViewINSTAGRAM"
+        android:layout_alignLeft="@+id/editTextSNAPCHAT"
+        android:layout_alignStart="@+id/editTextSNAPCHAT"
+        android:layout_alignRight="@+id/editTextSNAPCHAT"
+        android:layout_alignEnd="@+id/editTextSNAPCHAT" />
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/imageViewFACEBOOK"
+        android:background="@drawable/facebook"
+        android:layout_below="@+id/imageViewINSTAGRAM"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editTextFACEBOOK"
+        android:layout_alignBottom="@+id/imageViewFACEBOOK"
+        android:layout_alignLeft="@+id/editTextINSTAGRAM"
+        android:layout_alignStart="@+id/editTextINSTAGRAM" />
+
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:id="@+id/imageViewEMAIL"
+        android:background="@drawable/mail"
+        android:layout_below="@+id/imageViewFACEBOOK"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/editTextEMAIL"
+        android:layout_alignBottom="@+id/imageViewEMAIL"
+        android:layout_alignLeft="@+id/editTextFACEBOOK"
+        android:layout_alignStart="@+id/editTextFACEBOOK" />
+
+</RelativeLayout>

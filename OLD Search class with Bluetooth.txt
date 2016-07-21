@@ -1,0 +1,576 @@
+package com.example.dima.slideapp;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Environment;
+import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
+
+
+public class Search extends Activity {
+
+    //TODO: Find out how to change the name of the file that is recieved.
+    //TODO: Find out how to access the file that is recived
+
+    private static final int ACTIVITY_RESULT_QR_DRDROID = 0;
+
+    Button generate;
+    EditText edit;
+    File file ;
+    int didGenerate =0;
+
+
+    private BluetoothAdapter mBTAdapter;
+    DataBase DATABASE;
+    String MAIN_USER ="";
+    String QRCode;
+
+    //private int BLUETOOTH_ENABLE_DISCOVERABLE = 420;
+    //private int SEND_SUCCESSFUL = 20;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        Button messageButon = (Button)findViewById(R.id.btnSendMessage);
+       messageButon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //initiateSendMessage();
+           }
+       });
+        messageButon.setVisibility(View.GONE);
+
+
+        //opening the database
+        openDATABASE();
+        Cursor cursor = DATABASE.getAllRows();
+
+
+        int i =0;
+        if (cursor.moveToFirst()) {
+            //do {
+                String contactName = cursor.getString(DATABASE.COL_NAME);
+                String contactPassword = cursor.getString(DATABASE.COL_PASSWORD);
+                String contactPhonenumber = cursor.getString(DATABASE.COL_PHONENUMBER);
+                String contactSnapchat = cursor.getString(DATABASE.COL_SNAPCHAT);
+                String contactInstagram = cursor.getString(DATABASE.COL_INSTAGRAM);
+                String contactFacebook = cursor.getString(DATABASE.COL_FACEBOOK);
+                String contactEmail = cursor.getString(DATABASE.COL_EMAIL);
+                MAIN_USER = contactName + "," + contactPhonenumber + "," + contactSnapchat+
+                        ","+ contactInstagram + "," + contactFacebook + "," + contactEmail;
+
+            //} while (cursor.moveToNext() && i == 0);
+            //i++;
+        }//closing if statement
+
+
+        //edited 4/15/2015
+        /*
+
+        //mBTAdapter is the current phone's bluetooth adapter
+        mBTAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        //If phone supports bluetooth
+        if(mBTAdapter != null){
+
+            //Enable discoverable(let others see you)
+            Intent discoverableIntent =  new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 420);
+            startActivityForResult(discoverableIntent, BLUETOOTH_ENABLE_DISCOVERABLE);
+
+            //Start discovery to search for other devices(you see others)
+            boolean isDiscovering = mBTAdapter.startDiscovery();
+            if(isDiscovering)
+                Toast.makeText(this,
+                        R.string.is_discovering,
+                        Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(this,
+                        R.string.is_not_discovering,
+                        Toast.LENGTH_SHORT).show();
+
+        }else{//phone does not support bluetooth
+            Toast.makeText(this,
+                    R.string.bt_not_supported,
+                    Toast.LENGTH_SHORT).show();
+        }
+
+        */
+
+        //Qr code example!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        generate = (Button) findViewById(R.id.button1);
+        //edit = (EditText) findViewById(R.id.editText1);
+
+        generate.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+
+                String code ;
+
+
+
+                //adding a line from database
+                code = MAIN_USER;
+
+                System.out.println(code);
+
+                Intent encode = new Intent("la.droid.qr.encode");
+                encode.putExtra("la.droid.qr.code", code);
+                encode.putExtra("la.droid.qr.image", true);
+                encode.putExtra("la.droid.qr.size", 0);
+
+                try {
+
+                    startActivityForResult(encode, ACTIVITY_RESULT_QR_DRDROID);
+                }
+                catch (ActivityNotFoundException activity) {
+
+                    qrDroidRequired(Search.this);
+                }
+            }
+        });
+
+    }//clossing onCreate()
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(ACTIVITY_RESULT_QR_DRDROID == requestCode
+                && data != null && data.getExtras() != null ) {
+
+            ImageView imgResult = ( ImageView ) findViewById(R.id.imageView);
+
+            String qrCode = data.getExtras().getString("la.droid.qr.result");
+
+            if(qrCode == null || qrCode.trim().length() == 0) {
+
+                Toast.makeText(getBaseContext(), "QR Code Image " +
+                        "is not Saved", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            //Toast.makeText(getBaseContext(), "QR Code Image is Saved"
+              //      + " " + qrCode, Toast.LENGTH_LONG).show();
+
+
+            //TextView view1 = (TextView)findViewById(R.id.textView);
+            //view1.setText(qrCode);
+
+            imgResult.setImageURI( Uri.parse(qrCode) );
+            QRCode = qrCode;
+            file = new File(qrCode);
+            didGenerate =1;
+
+        }
+    }
+
+
+    //adding stuff for QR CODES Implimentation
+
+
+
+
+
+
+    protected static void qrDroidRequired(final Search activity) {
+        // TODO Auto-generated method stub
+
+        AlertDialog.Builder AlertBox = new AlertDialog.Builder(activity);
+
+        AlertBox.setMessage("QRDroid Missing");
+
+        AlertBox.setPositiveButton("Direct Download", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                // TODO Auto-generated method stub
+
+                activity.startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://droid.la/apk/qr/")));
+            }
+        });
+
+        AlertBox.setNeutralButton("From Market", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+
+                activity.startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://market.android.com/details?id=la.droid.qr")));
+            }
+        });
+
+        AlertBox.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+
+                dialog.cancel();
+            }
+        });
+
+        AlertBox.create().show();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //Nothing
+    }
+//QR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();;
+        closeDATABASE();
+
+        if(didGenerate == 1) {
+            if (file.exists()) {
+                boolean delete = file.delete();
+            }
+        }
+    }
+
+    private void closeDATABASE() {
+        DATABASE.close();
+    }//closing closeDATABASE()
+
+    private void openDATABASE() {
+        DATABASE = new DataBase(this);
+        DATABASE.open();
+    }//closing openDATABASE()
+
+
+
+
+    /**
+     * Executes the code necessary to send a message to another device
+     * The following method brings up a bluetooth share activity that is
+     *      handled by the android OS.
+     * This activity allows the user to send a hard coded string(stringToSend)
+     *      to the device that is chosen.
+     * The sending of this string is done via Bluetooth communication
+     */
+
+    //edited 4/15/2015
+    //edited 4/15/2015
+        /*
+    private void initiateSendMessage() {
+        // bring up Android chooser
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+
+        //Create the string to pass to the other phone
+        String openingDelimiter = "dima N kevin";
+        String closingDelimiter = "kevin N dima";
+
+        Date timeStamp = new Date();
+        //TODO-send string
+        String stringToSend = openingDelimiter + MAIN_USER + closingDelimiter;
+        intent.putExtra(Intent.EXTRA_TEXT, stringToSend);
+        intent.setType("text/plain");
+
+        //list of apps that can handle our intent
+        PackageManager pm = getPackageManager();
+        List<ResolveInfo> appsList = pm.queryIntentActivities( intent, 0);
+
+        if(appsList.size() > 0){
+            //select bluetooth
+            String packageName = null;
+            String className = null;
+            boolean found = false;
+
+            for(ResolveInfo info: appsList){
+                packageName = info.activityInfo.packageName;
+                if( packageName.equals("com.android.bluetooth")){
+                    className = info.activityInfo.name;
+                    found = true;
+
+                    //set our intent to launch Bluetooth
+                    intent.setClassName(packageName, className);
+                    //Starting this activity for a result always returns 0 as the resultCode
+                    //startActivityForResult(intent, SEND_SUCCESSFUL);
+                    startActivity(intent);
+
+                    break;
+                }
+            }
+            if(! found){
+                //Toast.makeText(this, R.string.blu_notfound_inlist,
+                //       LENGTH_SHORT).show();
+                // exit
+            }
+        }
+    }
+    /*
+
+    /* Checks if external storage is available for read and write
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
+    */
+
+    /* Checks if external storage is available to at least read x
+    public boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+*/
+/*
+
+    @Override
+    public void onRestart(){
+        super.onRestart();
+
+        //region Used for debugging when making sure that external storage is available
+        used for debugging
+        Toast.makeText(this,
+                R.string.on_restart_called,
+                Toast.LENGTH_SHORT).show();
+        if(isExternalStorageWritable())
+            Toast.makeText(this,
+                    R.string.external_storage_writable,
+                    Toast.LENGTH_SHORT).show();
+        else if(isExternalStorageReadable())
+            Toast.makeText(this,
+                    R.string.external_storage_readable,
+                    Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(this,
+                       Environment.getExternalStorageDirectory().toString(),
+                       Toast.LENGTH_LONG).show();
+
+        //endregion
+
+        File externalBluetoothFolder = new File(
+                Environment.getExternalStorageDirectory().toString() +
+                        "/bluetooth/");
+
+         //    Path that received files are sent to:
+           //    /storage/sdcard0/bluetooth/bluetooth_content_share_X.html
+         //
+        //region debugging to make sure of the path for the bluetooth
+
+        if(exteralBluetoothFolder.exists())
+            Toast.makeText(this,
+                    exteralBluetoothFolder.toString()+" _ [Exists]",
+                    Toast.LENGTH_LONG).show();
+
+        if(exteralBluetoothFolder.isFile())
+            Toast.makeText(this,
+                    exteralBluetoothFolder.toString()+" _ [isFile]",
+                    Toast.LENGTH_LONG).show();
+
+        if(exteralBluetoothFolder.canWrite())
+        Toast.makeText(this,
+                exteralBluetoothFolder.toString()+" _ [Can Write]",
+                Toast.LENGTH_LONG).show();
+
+       if(exteralBluetoothFolder.canRead())
+            Toast.makeText(this,
+                    exteralBluetoothFolder.toString()+" _ [Can Read]",
+                    Toast.LENGTH_LONG).show();
+        //endregion
+
+
+
+        //Create a buffer of 1000.
+        File[] receivedBluetoothMessageFiles = new File[1000];
+        receivedBluetoothMessageFiles = externalBluetoothFolder.listFiles();
+
+        //Find the most recent file in the array of files returned
+        File mostRecentFile = determineMostRecentFile( receivedBluetoothMessageFiles );
+
+            //Retrieve the entire file as a string
+            String encodedMessage = getFileContents(mostRecentFile);
+
+
+
+        //TODO- parse string
+        //Parse the file for the string withing the <a> ... </a> tag
+        String openingDelimiter = "dima N kevin";
+        String closingDelimiter = "kevin N dima";
+        int messageStartIndex = encodedMessage.indexOf( openingDelimiter ) +
+                openingDelimiter.length();
+        int messageEndIndex = encodedMessage.indexOf( closingDelimiter );
+        String decodedMessage =
+                encodedMessage.substring(messageStartIndex,
+                        messageEndIndex);
+
+        //adding a new contact to the database
+        String[] NEW_CONTACT = decodedMessage.split(",");
+        long addedUser = DATABASE.insertRow(NEW_CONTACT[0], "null", NEW_CONTACT[1], NEW_CONTACT[2],
+                NEW_CONTACT[3], NEW_CONTACT[4], NEW_CONTACT[5]);
+
+        Toast.makeText(this,
+                decodedMessage,
+                Toast.LENGTH_LONG).show();
+
+        //put parsed contents into the database
+        //exit transferring
+    }
+    */
+
+    /**
+     *
+     * @param file
+     * @return  A string that contains the contents of the input
+     */
+
+    /*
+    private String getFileContents(File file) {
+
+        String contents = null;
+
+        try {
+
+            //Scanner to read the file
+            Scanner messageScanner = new Scanner(file);
+            while(messageScanner.hasNextLine())
+                contents += messageScanner.nextLine();
+
+        } catch (Exception e) {
+
+            Toast.makeText(this,
+                    R.string.most_recent_file_not_found,
+                    Toast.LENGTH_SHORT);
+
+        }
+        return contents;
+    }
+
+*/
+    /** Find the most recently modified file an array of files
+     *
+     // @param fileList
+     * @return The most recently modified file
+     */
+    /*
+    private File determineMostRecentFile(File[] fileList) {
+
+        // Tracks a value to compare other values against
+         //  A file is more recently modified than another if its lastModified() method
+         //      returns a larger value than the other
+
+        long mostRecentlyModified = 0;
+        File mostRecentlyModifiedFile = null;
+        for(int i=0; i<fileList.length; i++) {
+            if (fileList[i].lastModified() > mostRecentlyModified) {
+                mostRecentlyModified = fileList[i].lastModified();
+                mostRecentlyModifiedFile = fileList[i];
+            }
+        }
+        return mostRecentlyModifiedFile;
+    }
+
+
+
+    @Override
+    protected void onActivityResult (int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+
+        //If the user presses the yes button to the enable discoverablity request
+        if(resultCode == BLUETOOTH_ENABLE_DISCOVERABLE)
+            initiateSendMessage();
+
+            //If the user presses the no button to the enable discoverablity request
+        else if(resultCode == RESULT_CANCELED)
+            Toast.makeText(this,
+                    R.string.must_enable_bt,
+                    Toast.LENGTH_SHORT).show();
+
+    }
+    */
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+}

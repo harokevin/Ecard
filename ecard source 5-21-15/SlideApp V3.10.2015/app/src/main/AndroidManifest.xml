@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.dima.slideapp" >
+
+    <!--
+     Bluetooth permissions
+     External storage writing permissions
+     External storage reading permissions(implicitly provided with WRITE)
+    -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE"></uses-permission>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/logo_compressed"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".myProfile"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".setUpAccount"
+            android:label="@string/title_activity_set_up_account"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".myPeople"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".MainMenu"
+            android:label="@string/title_activity_main_menu"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Register"
+            android:label="@string/title_activity_register"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".iconsForRegister"
+            android:label="@string/title_activity_icons_for_register"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Contact"
+            android:label="@string/title_activity_contact"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name=".showCodes"
+            android:label="@string/title_activity_show_codes"
+            android:screenOrientation="portrait">
+        </activity>
+    </application>
+
+</manifest>

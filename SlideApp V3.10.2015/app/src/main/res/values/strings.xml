@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SlideApp</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Log Off</string>
+    <string name="title_activity_search">Search</string>
+    <string name="title_activity_my_profile">myProfile</string>
+    <string name="title_activity_set_up_account">setUpAccount</string>
+    <string name="title_activity_my_people">myPeople</string>
+    <string name="title_activity_main_menu">MainMenu</string>
+    <string name="title_activity_register">Register</string>
+    <string name="title_activity_icons_for_register">iconsForRegister</string>
+    <string name="title_activity_contact">Contact</string>
+
+    <!--
+         Used in toast messages
+         Apostrophes(') must be preceded by a backslash(\)
+    -->
+    <string name="bt_not_supported">Your phone does not support Bluetooth.</string>
+    <string name="is_discovering">Discovering...</string>
+    <string name="is_not_discovering">Not discovering.</string>
+    <string name="must_enable_bt">You must enable Bluetooth discovery.</string>
+    <string name="external_storage_writable">You can write to this device\'s external storage.</string>
+    <string name="external_storage_readable">You can read from this device\'ss external storage.</string>
+    <string name="most_recent_file_not_found">Most recent file not found.</string>
+
+    <!-- unused -->
+    <string name="send_successful">Message successfully sent.</string>
+    <string name="send_unsuccessful">Message not successfully sent.</string>
+
+    <!-- debugging strings -->
+    <string name="on_resume_called">onResume has been called.</string>
+    <string name="on_restart_called">onRestart has been called.</string>
+    <string name="title_activity_show_qr">show_qr</string>
+    <string name="title_activity_show_codes">showCodes</string>
+
+</resources>
